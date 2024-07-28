@@ -8,6 +8,10 @@ namespace BlazorEcommerce.Shared
 {
     public class CartItem
     {
+        //Note: the first 3 properties will be the PK
+
+
+        public int UserId { get; set; }
         public int ProductId { get; set; }
         public int ProductTypeId { get; set; }
         public int Quantity { get; set; } = 1;

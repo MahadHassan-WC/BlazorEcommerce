@@ -13,6 +13,7 @@
         <AuthorizeView>
             <Authorized>
                 <a href="profile" class="dropdown-item">Profile</a>
+                <a href="orders" class="dropdown-item">Orders</a>
                 <hr />
                 <button class="dropdown-item" @onclick="Logout">Logout</button>
               
@@ -50,6 +51,7 @@
         try
         {
             await LocalStorage.RemoveItemAsync("authToken");
+            await CartService.GetCartItemsCount();
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
             NavigationManager.NavigateTo("/");
             showUserMenu = false;  // Hide the menu after logging out

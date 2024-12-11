@@ -101,22 +101,17 @@ namespace BlazorEcommerce.Server.Services.AuthService
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Email),
-                
+                 new Claim(ClaimTypes.Role, user.Role)
             };
-
-            //the key is found in appsettings.json
+           //the key is found in appsettings.json
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
                 .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-
             //we use the key to create signing credentials
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
             var token = new JwtSecurityToken(
                     claims: claims,
                     expires: DateTime.Now.AddDays(1),
                     signingCredentials: creds);
-
-
             try
             {
                  var jwt = new JwtSecurityTokenHandler().WriteToken(token);
@@ -126,14 +121,7 @@ namespace BlazorEcommerce.Server.Services.AuthService
             {
                 return ex.Message;
             }
-
-           
-
-            
         }
-
-
-
         public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
         {
             var user = await _context.Users.FindAsync(userId);
@@ -145,14 +133,10 @@ namespace BlazorEcommerce.Server.Services.AuthService
                     Message = "User not found."
                 };
             }
-
             CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
-
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-
             await _context.SaveChangesAsync();
-
             return new ServiceResponse<bool> { Data = true, Message = "Password has been changed." };
         }
 
